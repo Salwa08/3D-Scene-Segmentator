@@ -27,14 +27,14 @@ def read_ply(file_path):
     pos = points[['x', 'y', 'z']].values
 
     #Extract color data
-    colors = points[['red', 'green', 'blue']].values
-    colors = colors / 255.0
+    #colors = points[['red', 'green', 'blue']].values
+    #colors = colors / 255.0
 
 
     data = Data()
 
     data.pos = torch.tensor(pos, dtype=torch.float32)
-    data.rgb = torch.tensor(colors, dtype=torch.float32)
+    #data.rgb = torch.tensor(colors, dtype=torch.float32)
     
     return data
 
@@ -42,7 +42,7 @@ def read_ply(file_path):
 # Building the left sidebar menu
 with st.sidebar:
     selected = option_menu(
-        menu_title= 'SuperPoint Transformer',
+        menu_title= '⚡ SuperPoint Transformer',
         options= ['🏠 Home', '📚 How To Use', '🛠️ Segmentation Tool'],
         default_index= 0, 
     )
@@ -119,8 +119,9 @@ if selected == '🏠 Home':
 
     st.write("The work present in this web-app is an implementation of the model presented in the paper \"Scalable 3D Panoptic Segmentation As Superpoint Graph Clustering (3DV 2024 Oral)\".")
     st.write("Make sure to visit their github and star the repo if you ❤️ the work.")
-    st.link_button("SPT Github Repository.","https://github.com/drprojects/superpoint_transformer")
-    st.write("If you like this project, don't forget to visit my github by clicking the github icon in the top right corner and drop a ⭐🤩. It would be greatly appreciated! Thanks in advance!")
+    st.link_button("SPT Github Repository","https://github.com/drprojects/superpoint_transformer")
+    st.write("If you like this project, don't forget to visit my github and drop a ⭐🤩. It would be greatly appreciated! Thanks in advance!")
+    st.link_button("This project's Github Repository","https://github.com/TheGitSlender/3D-Scene-Segmentator")
 
 
     st.image("./media/teaser_spt.png",output_format="auto")
@@ -140,15 +141,36 @@ if selected == '🏠 Home':
                 | ⚡ S3DIS training in **3h on 1 GPU** ([PointNeXt](https://github.com/guochengqian/PointNeXt) ÷ 7, [Stratified Transformer](https://github.com/dvlab-research/Stratified-Transformer) ÷ 70) | 
                 | ⚡ **Preprocessing x7 faster than [SPG](https://github.com/loicland/superpoint_graph)** |
     """)
-    st.write("This implementation of the model has only been trained on Area 5 of S3DIS, on a T4 GPU machine. Resulting in metrics such as:")
-    st.write("Mean IoU: 68%")
-    st.write("Overall Accuracy: 89%")
-
-
+    st.write("""This implementation of the model has been trained Areas 1-6, and tested on Area 5 of S3DIS, on a T4 GPU machine. Resulting in metrics such as: 
+             Mean IoU: 69% 
+             Overall Accuracy: 90%""")
     st.write("Have fun!")
 
+# Building the guide to using the app
+elif selected =="📚 How To Use":
+    st.title("How to use the segmentation Tool")
+    st.write("""
+    1. **Upload a PLY file**: Click on the "Upload a ply file" button to upload your point cloud data in PLY format.
+    2. **Segmentation Process**: Once the file is uploaded, the app will process the data and perform semantic segmentation using the Superpoint Transformer model.
+    3. **Download Results**: After the segmentation is complete, you can download the HTML visualization of the segmentation results and the .pt file containing the segmentation data.
+             You may preview the results on this website although it is recommended to open the HTML file in a different page.
+    """)
+    st.title("Navigating the visualization")
+    st.write("""
+        - **Right Click**: Move the user's perspective.
+        - **Left Click**: Rotate the object in the 3D visualization.
+        - **Scroll Up/Down**: Zoom in and out.
+        """)
+    st.title("Type of Visualization")
+    st.write("""
+    - **Position RGB**: The color defines the point's relative position to (0,0,0).
+    - **Semantic Pred.**: The semantic prediction: each color represents a class, hovering the mouse on the point will show its class.
+    - **Features 3D**: Each point in the point cloud can carry additional data called features. These features are numerical values (scalars or vectors) that describe certain properties of the point, such as intensity, color, or other computed attributes. This mode shows the distribution of these features across the point cloud.
+    - **Level 1/2 and 3**: Represent the partition level of the superpoint architecture.
+    """)
+    st.write("Changing the page inside this website will not save your changes!! Make sure to download your files or preview the results of the segmentation before changing the page of your browser, or you will have to redo steps 1-3.")
 
-## Building The segmentation tool
+# Building The segmentation tool
 elif selected == '🛠️ Segmentation Tool':
      # Apply custom CSS styles for the dark theme and improved design
     st.markdown(
